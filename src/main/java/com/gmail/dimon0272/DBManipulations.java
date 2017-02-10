@@ -9,10 +9,12 @@ import java.util.Scanner;
  */
 public class DBManipulations {
     private Connection connection;
-
+    private static final String DATA_BASE_PATH = "jdbc:mysql://localhost:3306/mydb?autoReconnect=true&useSSL=false";
+    private String userDistrict;
+    private String userAddress;
     public void createDBconnection(){
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?autoReconnect=true&useSSL=false", "root","root");
+            connection = DriverManager.getConnection(DATA_BASE_PATH, "root","root");
             if(!connection.isClosed()){
                 System.out.println("Соединение с БД установленно");
             }
@@ -52,7 +54,6 @@ public class DBManipulations {
 
     private void manipulationsWithDistricts() throws SQLException{
         Scanner sc = new Scanner(System.in);
-        String userDistrict = "";
         boolean flag = true;
         while(flag) {
             System.out.println("1:Show info about flats at your district.");
@@ -61,21 +62,10 @@ public class DBManipulations {
             int index  = sc.nextInt();
             switch (index) {
                 case 1:
-                    Scanner scc = new Scanner(System.in);
-                    System.out.println("Please input name of your district: ");
-                    userDistrict = scc.nextLine();
-                    PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM flats WHERE district =?");
-                    ps1.setString(1, userDistrict);
-                    ResultSet rs = ps1.executeQuery();
-                    processingResultSet(rs);
+                    processingSelectQuery("SELECT * FROM flats WHERE district =?", "district");
                     break;
                 case 2:
-                    Scanner sccc = new Scanner(System.in);
-                    System.out.println("Please input name of your district: ");
-                    userDistrict = sccc.nextLine();
-                    PreparedStatement ps2 = connection.prepareStatement("DELETE FROM flats WHERE district=?");
-                    ps2.setString(1,userDistrict);
-                    ps2.executeUpdate();
+                    processingDeleteQuery("DELETE FROM flats WHERE district=?","district");
                     break;
                 case 3:
                     flag = false;
@@ -83,9 +73,10 @@ public class DBManipulations {
             }
         }
     }
+
     private void manipulationsWithAddress() throws SQLException{
         Scanner sc = new Scanner(System.in);
-        String userAddress = "";
+
         boolean flag = true;
         while(flag) {
             System.out.println("1:Show info about flats at your address.");
@@ -94,21 +85,10 @@ public class DBManipulations {
             int index  = sc.nextInt();
             switch (index) {
                 case 1:
-                    Scanner scc = new Scanner(System.in);
-                    System.out.println("Please input name of your address: ");
-                    userAddress = scc.nextLine();
-                    PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM flats WHERE address =?");
-                    ps1.setString(1, userAddress);
-                    ResultSet rs = ps1.executeQuery();
-                    processingResultSet(rs);
+                    processingSelectQuery("SELECT * FROM flats WHERE address =?", "address");
                     break;
                 case 2:
-                    Scanner sccc = new Scanner(System.in);
-                    System.out.println("Please input name of your address: ");
-                    userAddress = sccc.nextLine();
-                    PreparedStatement ps2 = connection.prepareStatement("DELETE FROM flats WHERE address=?");
-                    ps2.setString(1,userAddress);
-                    ps2.executeUpdate();
+                    processingDeleteQuery("DELETE FROM flats WHERE address=?", "address");
                     break;
                 case 3:
                     flag = false;
@@ -129,39 +109,16 @@ public class DBManipulations {
             int index  = sc.nextInt();
             switch (index) {
                 case 1:
-                    Scanner scc = new Scanner(System.in);
-                    System.out.println("Please input number of rooms ");
-                    userRooms = scc.nextInt();
-                    PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM flats WHERE rooms =?");
-                    ps1.setString(1, userRooms.toString());
-                    ResultSet rs1 = ps1.executeQuery();
-                    processingResultSet(rs1);
+                    processingSelectQuery("SELECT * FROM flats WHERE rooms =?", "rooms");
                     break;
                 case 2:
-                    Scanner sccc = new Scanner(System.in);
-                    System.out.println("Please input number of rooms: ");
-                    userRooms = sccc.nextInt();
-                    PreparedStatement ps2 = connection.prepareStatement("DELETE FROM flats WHERE rooms=?");
-                    ps2.setString(1, userRooms.toString());
-                    ps2.executeUpdate();
+                    processingDeleteQuery("DELETE FROM flats WHERE rooms=?", "rooms");
                     break;
                 case 3:
-                    Scanner scanner = new Scanner(System.in);
-                    System.out.println("Please input number of rooms: ");
-                    userRooms = scanner.nextInt();
-                    PreparedStatement ps3 = connection.prepareStatement("SELECT * FROM flats WHERE rooms >?");
-                    ps3.setString(1, userRooms.toString());
-                    ResultSet rs2 = ps3.executeQuery();
-                    processingResultSet(rs2);
+                    processingSelectQuery("SELECT * FROM flats WHERE rooms >?", "rooms");
                     break;
                 case 4:
-                    Scanner scannerr = new Scanner(System.in);
-                    System.out.println("Please input number of rooms: ");
-                    userRooms = scannerr.nextInt();
-                    PreparedStatement ps4 = connection.prepareStatement("SELECT * FROM flats WHERE rooms <?");
-                    ps4.setString(1, userRooms.toString());
-                    ResultSet rs3 = ps4.executeQuery();
-                    processingResultSet(rs3);
+                    processingSelectQuery("SELECT * FROM flats WHERE rooms <?", "rooms");
                     break;
                 case 5:
                     flag = false;
@@ -182,45 +139,39 @@ public class DBManipulations {
             int index  = sc.nextInt();
             switch (index) {
                 case 1:
-                    Scanner scc = new Scanner(System.in);
-                    System.out.println("Please input price of flat ");
-                    userPrice = scc.nextDouble();
-                    PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM flats WHERE price=?");
-                    ps1.setString(1, userPrice.toString());
-                    ResultSet rs1 = ps1.executeQuery();
-                    processingResultSet(rs1);
+                    processingSelectQuery("SELECT * FROM flats WHERE price=?", "price");
                     break;
                 case 2:
-                    Scanner sccc = new Scanner(System.in);
-                    System.out.println("Please input price of flat: ");
-                    userPrice = sccc.nextDouble();
-                    PreparedStatement ps2 = connection.prepareStatement("DELETE FROM flats WHERE price=?");
-                    ps2.setString(1, userPrice.toString());
-                    ps2.executeUpdate();
+                    processingDeleteQuery("DELETE FROM flats WHERE price=?", "price");
                     break;
                 case 3:
-                    Scanner scanner = new Scanner(System.in);
-                    System.out.println("Please input price of flat: ");
-                    userPrice = scanner.nextDouble();
-                    PreparedStatement ps3 = connection.prepareStatement("SELECT * FROM flats WHERE price >?");
-                    ps3.setString(1, userPrice.toString());
-                    ResultSet rs2 = ps3.executeQuery();
-                    processingResultSet(rs2);
+                    processingSelectQuery("SELECT * FROM flats WHERE price >?", "price");
                     break;
                 case 4:
-                    Scanner scannerr = new Scanner(System.in);
-                    System.out.println("Please input price of flat: ");
-                    userPrice = scannerr.nextDouble();
-                    PreparedStatement ps4 = connection.prepareStatement("SELECT * FROM flats WHERE price <?");
-                    ps4.setString(1, userPrice.toString());
-                    ResultSet rs3 = ps4.executeQuery();
-                    processingResultSet(rs3);
+                    processingSelectQuery("SELECT * FROM flats WHERE price <?", "price");
                     break;
                 case 5:
                     flag = false;
                     break;
             }
         }
+    }
+    private void processingSelectQuery(String query, String parametr) throws SQLException{
+        Scanner scc = new Scanner(System.in);
+        System.out.println("Please input your " +parametr+": ");
+        userDistrict = scc.nextLine();
+        PreparedStatement ps1 = connection.prepareStatement(query);
+        ps1.setString(1, userDistrict);
+        ResultSet rs = ps1.executeQuery();
+        processingResultSet(rs);
+    }
+    private void processingDeleteQuery(String query, String parametr) throws SQLException{
+        Scanner scc = new Scanner(System.in);
+        System.out.println("Please input your "+parametr+": ");
+        userDistrict = scc.nextLine();
+        PreparedStatement ps2 = connection.prepareStatement(query);
+        ps2.setString(1,userDistrict);
+        ps2.executeUpdate();
     }
     private void processingResultSet(ResultSet resultSet){
         ArrayList <Flat> flatArrayList= new ArrayList<Flat>();
