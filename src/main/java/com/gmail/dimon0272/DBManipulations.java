@@ -10,8 +10,8 @@ import java.util.Scanner;
 public class DBManipulations {
     private Connection connection;
     private static final String DATA_BASE_PATH = "jdbc:mysql://localhost:3306/mydb?autoReconnect=true&useSSL=false";
-    private String userDistrict;
-    private String userAddress;
+    private String userParametr;
+
     public void createDBconnection(){
         try {
             connection = DriverManager.getConnection(DATA_BASE_PATH, "root","root");
@@ -159,18 +159,18 @@ public class DBManipulations {
     private void processingSelectQuery(String query, String parametr) throws SQLException{
         Scanner scc = new Scanner(System.in);
         System.out.println("Please input your " +parametr+": ");
-        userDistrict = scc.nextLine();
+        userParametr= scc.nextLine();
         PreparedStatement ps1 = connection.prepareStatement(query);
-        ps1.setString(1, userDistrict);
+        ps1.setString(1, userParametr);
         ResultSet rs = ps1.executeQuery();
         processingResultSet(rs);
     }
     private void processingDeleteQuery(String query, String parametr) throws SQLException{
         Scanner scc = new Scanner(System.in);
         System.out.println("Please input your "+parametr+": ");
-        userDistrict = scc.nextLine();
+        userParametr = scc.nextLine();
         PreparedStatement ps2 = connection.prepareStatement(query);
-        ps2.setString(1,userDistrict);
+        ps2.setString(1,userParametr);
         ps2.executeUpdate();
     }
     private void processingResultSet(ResultSet resultSet){
